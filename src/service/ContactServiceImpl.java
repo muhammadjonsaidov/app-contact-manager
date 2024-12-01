@@ -15,7 +15,6 @@ public class ContactServiceImpl implements ContactService {
         contactTypes = new ContactType[capacityType];
         contactTypes[0] = new ContactType("\uD83D\uDC6A", "Parents");
         contactTypes[1] = new ContactType("\uD83E\uDEC2", "Friends");
-
         contacts = new Contact[capacityContact];
     }
 
@@ -38,7 +37,6 @@ public class ContactServiceImpl implements ContactService {
 
         //chosen or skip
         ContactType contactType = chooseContactType(scanner);
-
         if (name.isBlank() && phone.isBlank()) {
             System.err.println("You can not create contact with null name or phone");
             add();
@@ -46,7 +44,6 @@ public class ContactServiceImpl implements ContactService {
         }
 
         Contact contact = new Contact(name, phone, email, contactType);
-
         while (true) {
             System.out.println(contact);
             System.out.println("""
@@ -70,6 +67,155 @@ public class ContactServiceImpl implements ContactService {
                 }
                 default -> System.err.println("Invalid command. Please try again.");
             }
+        }
+    }
+
+    @Override
+    public void edit() {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
+
+    @Override
+    public void showList() {
+        while (true) {
+            System.out.println("Enter contact number if you want to see about this contact information.");
+            for (int i = 0; i < contacts.length; i++) {
+                if (contacts[i] == null)
+                    break;
+                System.out.println(i + 1 + ". " +
+                        (!contacts[i].getName().isEmpty() ? contacts[i].getName() : contacts[i].getPhone())
+                );
+            }
+            System.out.println("0 => Exit to menu");
+            Scanner scanner = new Scanner(System.in);
+            int idx = scanner.nextInt();
+            if (idx == 0)
+                return;
+            if (idx - 1 >= contacts.length || contacts[idx - 1] == null) {
+                showList();
+                return;
+            }
+
+            System.out.println(contacts[idx - 1]);
+        }
+    }
+
+    @Override
+    public void search() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter searching keyword");
+        String pattern = scanner.nextLine();
+        //988
+        //[{bahrom, 98, ketmo@mail.ru},{ali,78},{}]
+        int idx = 1;
+        for (Contact contact : contacts) {
+            if (contact == null)
+                break;
+            String name = contact.getName();
+            String phone = contact.getPhone();
+            String email = contact.getEmail();
+            if (name != null && name.toLowerCase().contains(pattern)) {
+                System.out.println(idx + ". " + contact.getName());
+            } else if (phone != null && phone.toLowerCase().contains(pattern)) {
+                System.out.println(idx + ". " + contact.getPhone());
+            } else if (email != null && email.toLowerCase().contains(pattern)) {
+                System.out.println(idx + ". " + contact.getEmail());
+            } else {
+                continue;
+            }
+            idx++;
+        }
+    }
+
+    @Override
+    public void merge() {
+
+    }
+
+    private void saveContact(Contact contact) {
+        for (int i = 0; i < contacts.length; i++) {
+            if (contacts[i] == null) {
+                contacts[i] = contact;
+                System.out.println("Contact saved successfully.");
+                return;
+            }
+        }
+        Contact[] newArray = new Contact[contacts.length * 2];
+        System.arraycopy(contacts, 0, newArray, 0, contacts.length);
+        newArray[contacts.length] = contact;
+        contacts = newArray;
+        System.out.println("Contact saved successfully");
+    }
+
+    private ContactType chooseContactType(Scanner scanner) {
+        //[parents, friends,mate, bla, battar]
+        while (true) {
+            System.out.println("""
+                    Choose or add contact type:
+                    -1=> ⏭️ Skip
+                    0 => ➕ Add new contact type""");
+            for (int i = 0; i < contactTypes.length; i++) {
+                ContactType contactType = contactTypes[i];
+                if (contactType == null)
+                    break;
+                System.out.println((i + 1) + ". " + contactType.getIcon() + " " + contactType.getName());
+            }
+
+            int idx;
+            try {
+                idx = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.err.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (idx == -1) return null;
+            if (idx == 0) {
+                System.out.println("Enter new contact type icon: ");
+                String typeIcon = scanner.nextLine().trim();
+
+                System.out.println("Enter new contact type name: ");
+                String typeName = scanner.nextLine().trim();
+
+                if (typeIcon.isEmpty() || typeName.isEmpty()) {
+                    System.err.println("Icon and name cannot be empty. Try again.");
+                    continue;
+                }
+
+                ContactType newContactType = new ContactType(typeIcon, typeName);
+                boolean isAdded = false;
+                for (int i = 0; i < contactTypes.length; i++) {
+                    if (contactTypes[i] == null) {
+                        contactTypes[i] = newContactType;
+                        isAdded = true;
+                        break;
+                    }
+                }
+
+                if (!isAdded) {
+                    ContactType[] newArray = new ContactType[contactTypes.length * 2];
+                    System.arraycopy(contactTypes, 0, newArray, 0, contactTypes.length);
+                    newArray[contactTypes.length] = newContactType;
+                    contactTypes = newArray;
+                }
+
+                System.out.println("New contact type added successfully.");
+                continue;
+            }
+
+            if (idx - 1 < 0 || idx - 1 >= contactTypes.length || contactTypes[idx - 1] == null) {
+                System.err.println("Incorrect option. Try again.");
+                continue;
+            }
+
+            return contactTypes[idx - 1];
         }
     }
 
@@ -142,158 +288,5 @@ public class ContactServiceImpl implements ContactService {
                 break;
             }
         }
-    }
-
-    @Override
-    public void edit() {
-
-    }
-
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void showList() {
-        while (true) {
-            System.out.println("Enter contact number if you want to see about this contact information.");
-            for (int i = 0; i < contacts.length; i++) {
-                if (contacts[i] == null)
-                    break;
-                System.out.println(i + 1 + ". " +
-                        (!contacts[i].getName().isEmpty() ? contacts[i].getName() : contacts[i].getPhone())
-                );
-            }
-            System.out.println("0 => Exit to menu");
-            Scanner scanner = new Scanner(System.in);
-            int idx = scanner.nextInt();
-            if (idx == 0)
-                return;
-            if (idx - 1 >= contacts.length || contacts[idx - 1] == null) {
-                showList();
-                return;
-            }
-
-            System.out.println(contacts[idx - 1]);
-        }
-    }
-
-    @Override
-    public void search() {
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter searching keyword");
-        String pattern = scanner.nextLine().toLowerCase();
-        
-        int idx = 1;
-        for (Contact contact : contacts) {
-            if (contact == null)
-                break;
-            String name = contact.getName();
-            String phone = contact.getPhone();
-            String email = contact.getEmail();
-            ContactType contactType = contact.getContactType();
-            String contactTypeName = contactType != null ? contactType.getName() : null;
-            String contactTypeIcon = contactType != null ? contactType.getIcon() : null;
-
-            if ((name != null && name.toLowerCase().contains(pattern)) ||
-                (phone != null && phone.toLowerCase().contains(pattern)) ||
-                (email != null && email.toLowerCase().contains(pattern)) ||
-                (contactTypeName != null && contactTypeName.toLowerCase().contains(pattern)) ||
-                (contactTypeIcon != null && contactTypeIcon.toLowerCase().contains(pattern))) {
-                System.out.println(idx + ". " + contact);
-                idx++;
-            }
-        }
-    }
-
-    @Override
-    public void merge() {
-
-    }
-
-
-    private ContactType chooseContactType(Scanner scanner) {
-        //[parents, friends,mate, bla, battar]
-        while (true) {
-            System.out.println("""
-                    Choose or add contact type:
-                    -1=> ⏭️ Skip
-                    0 => ➕ Add new contact type""");
-            for (int i = 0; i < contactTypes.length; i++) {
-                ContactType contactType = contactTypes[i];
-                if (contactType == null)
-                    break;
-                System.out.println((i + 1) + ". " + contactType.getIcon() + " " + contactType.getName());
-            }
-
-            int idx;
-            try {
-                idx = scanner.nextInt();
-                scanner.nextLine();
-            } catch (InputMismatchException e) {
-                System.err.println("Invalid input. Please enter a number.");
-                scanner.nextLine();
-                continue;
-            }
-
-            if (idx == -1) return null;
-            if (idx == 0) {
-                System.out.println("Enter new contact type icon: ");
-                String typeIcon = scanner.nextLine().trim();
-
-                System.out.println("Enter new contact type name: ");
-                String typeName = scanner.nextLine().trim();
-
-                if (typeIcon.isEmpty() || typeName.isEmpty()) {
-                    System.err.println("Icon and name cannot be empty. Try again.");
-                    continue;
-                }
-
-                ContactType newContactType = new ContactType(typeIcon, typeName);
-                boolean isAdded = false;
-                for (int i = 0; i < contactTypes.length; i++) {
-                    if (contactTypes[i] == null) {
-                        contactTypes[i] = newContactType;
-                        isAdded = true;
-                        break;
-                    }
-                }
-
-                if (!isAdded) {
-                    ContactType[] newArray = new ContactType[contactTypes.length * 2];
-                    System.arraycopy(contactTypes, 0, newArray, 0, contactTypes.length);
-                    newArray[contactTypes.length] = newContactType;
-                    contactTypes = newArray;
-                }
-
-                System.out.println("New contact type added successfully.");
-                continue;
-            }
-
-            if (idx - 1 < 0 || idx - 1 >= contactTypes.length || contactTypes[idx - 1] == null) {
-                System.err.println("Incorrect option. Try again.");
-                continue;
-            }
-
-            return contactTypes[idx - 1];
-        }
-    }
-
-    private void saveContact(Contact contact) {
-        for (int i = 0; i < contacts.length; i++) {
-            if (contacts[i] == null) {
-                contacts[i] = contact;
-                System.out.println("Contact saved successfully.");
-                return;
-            }
-        }
-        Contact[] newArray = new Contact[contacts.length * 2];
-        System.arraycopy(contacts, 0, newArray, 0, contacts.length);
-        newArray[contacts.length] = contact;
-        contacts = newArray;
-        System.out.println("Contact saved successfully");
     }
 }
