@@ -161,7 +161,9 @@ public class ContactServiceImpl implements ContactService {
             for (int i = 0; i < contacts.length; i++) {
                 if (contacts[i] == null)
                     break;
-                System.out.println(i + 1 + ". " + contacts[i].getName());
+                System.out.println(i + 1 + ". " +
+                        (!contacts[i].getName().isEmpty() ? contacts[i].getName() : contacts[i].getPhone())
+                );
             }
             System.out.println("0 => Exit to menu");
             Scanner scanner = new Scanner(System.in);
