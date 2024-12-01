@@ -70,11 +70,13 @@ public class ContactServiceImpl implements ContactService {
         }
     }
 
+    //todo: must have complete edit method
     @Override
     public void edit() {
 
     }
 
+    //todo: must have complete delete method
     @Override
     public void delete() {
 
@@ -135,6 +137,7 @@ public class ContactServiceImpl implements ContactService {
         }
     }
 
+    //todo: must have complete merge method
     @Override
     public void merge() {
 
