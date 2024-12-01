@@ -218,16 +218,16 @@ public class ContactServiceImpl implements ContactService {
     private ContactType chooseContactType(Scanner scanner) {
         //[parents, friends,mate, bla, battar]
         while (true) {
-            System.out.println("Choose or add contact type: ");
-
+            System.out.println("""
+                    Choose or add contact type:
+                    -1=> ⏭️ Skip
+                    0 => ➕ Add new contact type""");
             for (int i = 0; i < contactTypes.length; i++) {
                 ContactType contactType = contactTypes[i];
                 if (contactType == null)
                     break;
                 System.out.println((i + 1) + ". " + contactType.getIcon() + " " + contactType.getName());
             }
-            System.out.println("-1 => Skip");
-            System.out.println("0=> Add new contact type");
 
             int idx;
             try {
@@ -240,7 +240,6 @@ public class ContactServiceImpl implements ContactService {
             }
 
             if (idx == -1) return null;
-
             if (idx == 0) {
                 System.out.println("Enter new contact type icon: ");
                 String typeIcon = scanner.nextLine().trim();

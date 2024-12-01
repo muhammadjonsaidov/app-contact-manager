@@ -48,10 +48,10 @@ public class Contact {
     public String toString() {
         return String.format(""" 
                 Contact Details:
-                Name: %s
-                Phone: %s
-                Email: %s
-                Contact Type: %s""",
+                -> Name: %s
+                -> Phone: %s
+                -> Email: %s
+                -> Category: \n%s""",
                 !name.isEmpty() ? name : "Unknown",
                 !phone.isEmpty() ? phone : "Unknown",
                 !email.isEmpty() ? email : "Unknown",
