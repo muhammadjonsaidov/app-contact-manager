@@ -48,7 +48,7 @@ public class ContactServiceImpl implements ContactService {
         Contact contact = new Contact(name, phone, email, contactType);
 
         while (true) {
-            System.out.println("Contact details: " + contact);
+            System.out.println(contact);
             System.out.println("""
                     Do you want to save the contact?
                     1 => Save
@@ -183,9 +183,8 @@ public class ContactServiceImpl implements ContactService {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter searching keyword");
-        String pattern = scanner.nextLine();
-        //988
-        //[{bahrom, 98, ketmo@mail.ru},{ali,78},{}]
+        String pattern = scanner.nextLine().toLowerCase();
+        
         int idx = 1;
         for (Contact contact : contacts) {
             if (contact == null)
@@ -193,20 +192,19 @@ public class ContactServiceImpl implements ContactService {
             String name = contact.getName();
             String phone = contact.getPhone();
             String email = contact.getEmail();
-            if (name != null && name.toLowerCase().contains(pattern)) {
-                System.out.println(idx + ". " + contact.getName());
-            } else if (phone != null && phone.toLowerCase().contains(pattern)) {
-                System.out.println(idx + ". " + contact.getPhone());
-            } else if (email != null && email.toLowerCase().contains(pattern)) {
-                System.out.println(idx + ". " + contact.getEmail());
-            } else {
-                continue;
+            ContactType contactType = contact.getContactType();
+            String contactTypeName = contactType != null ? contactType.getName() : null;
+            String contactTypeIcon = contactType != null ? contactType.getIcon() : null;
+
+            if ((name != null && name.toLowerCase().contains(pattern)) ||
+                (phone != null && phone.toLowerCase().contains(pattern)) ||
+                (email != null && email.toLowerCase().contains(pattern)) ||
+                (contactTypeName != null && contactTypeName.toLowerCase().contains(pattern)) ||
+                (contactTypeIcon != null && contactTypeIcon.toLowerCase().contains(pattern))) {
+                System.out.println(idx + ". " + contact);
+                idx++;
             }
-            idx++;
-
-
         }
-
     }
 
     @Override
@@ -255,7 +253,7 @@ public class ContactServiceImpl implements ContactService {
 
                 ContactType newContactType = new ContactType(typeIcon, typeName);
                 boolean isAdded = false;
-                for (int i = 0; i < contacts.length; i++) {
+                for (int i = 0; i < contactTypes.length; i++) {
                     if (contactTypes[i] == null) {
                         contactTypes[i] = newContactType;
                         isAdded = true;

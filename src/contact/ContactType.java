@@ -21,6 +21,6 @@ public class ContactType {
 
     @Override
     public String toString() {
-        return "ContactType{" + "icon='" + icon + '\'' + ", name='" + name + '\'' + '}';
+        return String.format("\nType Icon: %s, Type Name: %s", icon, name);
     }
 }

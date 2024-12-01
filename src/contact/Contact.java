@@ -20,10 +20,6 @@ public class Contact {
     public Contact() {
     }
 
-    public void setContactType(ContactType contactType) {
-        this.contactType = contactType;
-    }
-
     public String getName() {
         return name;
     }
@@ -50,11 +46,25 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", contactType=" + contactType +
-                '}';
+        return String.format(""" 
+                Contact Details:
+                Name: %s
+                Phone: %s
+                Email: %s
+                Contact Type: %s""",
+                !name.isEmpty() ? name : "Unknown",
+                !phone.isEmpty() ? phone : "Unknown",
+                !email.isEmpty() ? email : "Unknown",
+                contactType != null ? contactType.toString() : "N/A"
+        );
+
+    }
+
+    public ContactType getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(ContactType contactType) {
+        this.contactType = contactType;
     }
 }
