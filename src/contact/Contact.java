@@ -47,11 +47,11 @@ public class Contact {
     @Override
     public String toString() {
         return String.format(""" 
-                Contact Details:
-                -> Name: %s
-                -> Phone: %s
-                -> Email: %s
-                -> Category: \n%s""",
+                        Contact Details:
+                        -> Name: %s
+                        -> Phone: %s
+                        -> Email: %s
+                        -> Category: %s""",
                 !name.isEmpty() ? name : "Unknown",
                 !phone.isEmpty() ? phone : "Unknown",
                 !email.isEmpty() ? email : "Unknown",
