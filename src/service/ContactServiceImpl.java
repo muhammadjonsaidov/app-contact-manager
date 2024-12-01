@@ -119,14 +119,17 @@ public class ContactServiceImpl implements ContactService {
             String name = contact.getName();
             String phone = contact.getPhone();
             String email = contact.getEmail();
-            if (name != null && name.toLowerCase().contains(pattern)) {
-                System.out.println(idx + ". " + contact.getName());
-            } else if (phone != null && phone.toLowerCase().contains(pattern)) {
-                System.out.println(idx + ". " + contact.getPhone());
-            } else if (email != null && email.toLowerCase().contains(pattern)) {
-                System.out.println(idx + ". " + contact.getEmail());
-            } else {
-                continue;
+            ContactType contactType = contact.getContactType();
+            String contactTypeName = contactType != null ? contactType.getName() : null;
+            String contactTypeIcon = contactType != null ? contactType.getIcon() : null;
+            if ((!name.isBlank() && name.toLowerCase().contains(pattern)) ||
+                    (!phone.isBlank() && phone.toLowerCase().contains(pattern)) ||
+                    (!email.isBlank() && email.toLowerCase().contains(pattern)) ||
+                    (contactTypeName != null && contactTypeName.toLowerCase().contains(pattern)) ||
+                    (contactTypeIcon != null && contactTypeIcon.toLowerCase().contains(pattern))) {
+                System.out.println(idx + ". " +
+                        (!name.isBlank() ? name : phone)
+                );
             }
             idx++;
         }
