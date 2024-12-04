@@ -70,9 +70,25 @@ public class ContactServiceImpl implements ContactService {
         }
     }
 
-    //todo: must have complete edit method
+    //todo: Completed
     @Override
     public void edit() {
+        Scanner scanner = new Scanner(System.in);
+
+        Contact upfst = null;
+        System.out.println("Choose updating contact: ");
+        for (int i = 0; i < contacts.length; i++) {
+            if (contacts[i] == null) {
+                break;
+            }
+            System.out.println(i + 1 + ". " +
+                    (!contacts[i].getName().isEmpty() ? contacts[i].getName() : contacts[i].getPhone())
+            );
+            upfst = contacts[i];
+        }
+        updateContact(upfst, scanner);
+//        return;
+
 
     }
 
@@ -118,21 +134,7 @@ public class ContactServiceImpl implements ContactService {
         for (Contact contact : contacts) {
             if (contact == null)
                 break;
-            String name = contact.getName();
-            String phone = contact.getPhone();
-            String email = contact.getEmail();
-            ContactType contactType = contact.getContactType();
-            String contactTypeName = contactType != null ? contactType.getName() : null;
-            String contactTypeIcon = contactType != null ? contactType.getIcon() : null;
-            if ((!name.isBlank() && name.toLowerCase().contains(pattern)) ||
-                    (!phone.isBlank() && phone.toLowerCase().contains(pattern)) ||
-                    (!email.isBlank() && email.toLowerCase().contains(pattern)) ||
-                    (contactTypeName != null && contactTypeName.toLowerCase().contains(pattern)) ||
-                    (contactTypeIcon != null && contactTypeIcon.toLowerCase().contains(pattern))) {
-                System.out.println(idx + ". " +
-                        (!name.isBlank() ? name : phone)
-                );
-            }
+            checkContactFields(contact, pattern, idx);
             idx++;
         }
     }
@@ -141,6 +143,24 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public void merge() {
 
+    }
+
+    private static void checkContactFields(Contact contact, String pattern, int idx) {
+        String name = contact.getName();
+        String phone = contact.getPhone();
+        String email = contact.getEmail();
+        ContactType contactType = contact.getContactType();
+        String contactTypeName = contactType != null ? contactType.getName() : null;
+        String contactTypeIcon = contactType != null ? contactType.getIcon() : null;
+        if ((!name.isBlank() && name.toLowerCase().contains(pattern)) ||
+                (!phone.isBlank() && phone.toLowerCase().contains(pattern)) ||
+                (!email.isBlank() && email.toLowerCase().contains(pattern)) ||
+                (contactTypeName != null && contactTypeName.toLowerCase().contains(pattern)) ||
+                (contactTypeIcon != null && contactTypeIcon.toLowerCase().contains(pattern))) {
+            System.out.println(idx + ". " +
+                    (!name.isBlank() ? name : phone)
+            );
+        }
     }
 
     private void saveContact(Contact contact) {

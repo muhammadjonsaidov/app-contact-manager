@@ -22,9 +22,9 @@ public class ContactType {
     @Override
     public String toString() {
         return String.format("""
-                         
+                        \s
                          -> Type Icon: %s
                          -> Type Name: %s
-                """, icon, name);
+               \s""", icon, name);
     }
 }
